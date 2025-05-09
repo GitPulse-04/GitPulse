@@ -1,14 +1,16 @@
 import React, { useEffect, useState } from "react";
 import css from "./SideBar.module.css";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import { throttle } from "../utils/feature";
 
 const SideBar = () => {
   const [isOn, setIsOn] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const navigate = useNavigate();
 
-  const addClassOn = () => {
-    setIsOn(!isOn);
-  };
+  useEffect(() => {
+    setIsLoggedIn(!!localStorage.getItem("jwt"));
+  }, []);
 
   const handleResize = throttle(() => {
     if (window.innerWidth > 1100) {
@@ -23,13 +25,20 @@ const SideBar = () => {
     };
   }, [handleResize]);
 
+  const handleLogout = () => {
+    localStorage.removeItem("jwt");
+    navigate("/");
+  };
+
   return (
     <div className={isOn ? `${css.sideBarCon} ${css.on}` : css.sideBarCon}>
-      <div className={css.icon}>
-        <img src="./img/icon_mini.png" />
-      </div>
+      <a href="/mygit">
+        <div className={css.icon}>
+          <img src="./img/icon_mini.png" />
+        </div>
+      </a>
       <div className={css.sideBarList}>
-        <CustomNavLink to={"/"} label={"My Git"} icon={"bi-person-fill"} />
+        <CustomNavLink to={"/mygit"} label={"My Git"} icon={"bi-person-fill"} />
         <CustomNavLink
           to={"/organizaiton"}
           label={"Organization_1"}
@@ -56,6 +65,19 @@ const SideBar = () => {
           icon={"bi-people-fill"}
         />
       </div>
+      {isLoggedIn && (
+        <button
+          className={css.logoutButton}
+          onClick={handleLogout}
+          aria-label="로그아웃"
+          tabIndex={0}
+          onKeyDown={(e) => {
+            if (e.key === "Enter" || e.key === " ") handleLogout();
+          }}
+        >
+          로그아웃
+        </button>
+      )}
     </div>
   );
 };

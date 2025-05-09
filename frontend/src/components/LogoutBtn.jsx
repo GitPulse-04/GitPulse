@@ -14,6 +14,7 @@ const LogoutBtn = ({ user, onLogout }) => {
       >
         프로필 보기
       </a>
+      <a href="/Mygit">마이페이지</a>
       <button className={styles.logoutButton} onClick={onLogout}>
         로그아웃
       </button>
