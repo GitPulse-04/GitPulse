@@ -12,7 +12,7 @@
     <td align="center">
       <img src="https://avatars.githubusercontent.com/u/88296511?v=4" width="100" /><br/>
       <strong>이예은</strong><br/>
-      <a href="https://github.com/yeeun426">@khwww</a>
+      <a href="https://github.com/yeeun426">@yeeun426</a>
     </td>
     <td align="center">
       <img src="https://avatars.githubusercontent.com/u/180901036?v=4" width="100" /><br/>
