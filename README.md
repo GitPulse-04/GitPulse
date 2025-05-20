@@ -112,7 +112,8 @@
 ---
 
 🚫 커밋 허수 잡기
-<img width="1709" alt="2025-05-19_4 33 27" src="https://github.com/user-attachments/assets/6ecc86df-144c-49ae-8fbc-343982fbd529" width="500" />
+
+<img src="https://github.com/user-attachments/assets/6ecc86df-144c-49ae-8fbc-343982fbd529" width="500"/>
 
 ---
 
