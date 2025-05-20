@@ -3,7 +3,10 @@
 ![image](https://github.com/user-attachments/assets/e79aaca0-e84d-4c21-bf08-aea2601ff55e)
 
 >신뢰의 시작, 협업의 가교 개발자의 GitHub 활동을 시각화하여 협업 문화를 개선하는 도구
-
+## 🔗 프로젝트 링크
+- [Notion](https://wholesale-ogre-01e.notion.site/04-GitPulse-1ec590bd2a14801daf1df499c93a2a37)
+- [Figma](https://www.figma.com/design/kIHFv13Jizhpp3WK92o94R/GitPulse?node-id=0-1&t=iWL5lw33ot27hQLp-1)
+- [WBS](https://docs.google.com/spreadsheets/d/17q5j58uvLC5hygEhLr5V9N_KL1kpiSIgl9ApxCgpMwo/edit?gid=721559717#gid=721559717)
 
 ## 📌 소개
 
