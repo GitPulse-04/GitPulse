@@ -4,6 +4,8 @@
 
 >신뢰의 시작, 협업의 가교 개발자의 GitHub 활동을 시각화하여 협업 문화를 개선하는 도구
 ## 🔗 프로젝트 링크
+
+- [배포](https://gitpulse-6bpa.vercel.app)
 - [Notion](https://wholesale-ogre-01e.notion.site/04-GitPulse-1ec590bd2a14801daf1df499c93a2a37)
 - [Figma](https://www.figma.com/design/kIHFv13Jizhpp3WK92o94R/GitPulse?node-id=0-1&t=iWL5lw33ot27hQLp-1)
 - [WBS](https://docs.google.com/spreadsheets/d/17q5j58uvLC5hygEhLr5V9N_KL1kpiSIgl9ApxCgpMwo/edit?gid=721559717#gid=721559717)
@@ -102,4 +104,33 @@
 | 기타 도구  | ![GitHub](https://img.shields.io/badge/GitHub-181717?style=flat&logo=github&logoColor=white) ![Figma](https://img.shields.io/badge/Figma-F24E1E?style=flat&logo=figma&logoColor=white) ![Notion](https://img.shields.io/badge/Notion-000000?style=flat&logo=notion&logoColor=white) |
 
 ---
+## 주요 기능 소개
+🏅 Reward Badges & 💬 OneLine Comment
 
+<img src="https://github.com/user-attachments/assets/5b576443-ba4a-432b-9b4a-9573cf023caf" width="500"/>
+
+---
+
+🚫 커밋 허수 잡기
+
+---
+
+🔍 PR 리뷰 기능
+
+<img src="https://github.com/user-attachments/assets/441a4bd1-7da5-42a0-b83d-b645c2d259af" width="500"/>
+
+---
+
+🧠 개발자 유형 테스트
+
+<img src="https://github.com/user-attachments/assets/9b9e3168-f5f8-4e00-a254-db70d89c2e94" width="500"/>
+
+
+---
+
+📰 IT 뉴스 통합 페이지
+
+
+---
+
+🏆 이번 달 커밋 활동 경쟁
