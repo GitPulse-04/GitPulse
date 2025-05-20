@@ -130,7 +130,11 @@
 
 📰 IT 뉴스 통합 페이지
 
+<img src="https://github.com/user-attachments/assets/e673cd77-c1e2-46ab-8565-e0981763125c" width="500"/>
 
 ---
 
+
 🏆 이번 달 커밋 활동 경쟁
+
+<img src="https://github.com/user-attachments/assets/f7d43082-4402-4245-b54a-44e9217c6350" width="500"/>
