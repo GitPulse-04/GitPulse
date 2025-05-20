@@ -1,3 +1,35 @@
+
+### 👥 팀원 소개
+
+
+<table>
+  <tr>
+    <td align="center">
+      <img src="https://avatars.githubusercontent.com/u/100756731?v=4" width="100" /><br/>
+      <strong>김현우</strong><br/>
+      <a href="https://github.com/gusdn6288">@gusdn6288</a>
+    </td>
+    <td align="center">
+      <img src="https://avatars.githubusercontent.com/u/88296511?v=4" width="100" /><br/>
+      <strong>이예은</strong><br/>
+      <a href="https://github.com/yeeun426">@khwww</a>
+    </td>
+    <td align="center">
+      <img src="https://avatars.githubusercontent.com/u/180901036?v=4" width="100" /><br/>
+      <strong>박용규</strong><br/>
+      <a href="https://github.com/yonggyu99">@yonggyu99</a>
+    </td>
+    <td align="center">
+      <img src="https://avatars.githubusercontent.com/u/63743294?v=4" width="100" /><br/>
+      <strong>임재찬</strong><br/>
+      <a href="https://github.com/alex8396">@alex8396</a>
+    </td>
+  </tr>
+</table>
+
+
+
+
 ## 폴더구조
 ```
 📦 root/
