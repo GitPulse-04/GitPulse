@@ -1,5 +1,6 @@
 #  GitPulse
 ---
+
 ![image](https://github.com/user-attachments/assets/e79aaca0-e84d-4c21-bf08-aea2601ff55e)
 
 >신뢰의 시작, 협업의 가교 개발자의 GitHub 활동을 시각화하여 협업 문화를 개선하는 도구
