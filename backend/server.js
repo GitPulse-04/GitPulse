@@ -4,31 +4,45 @@ const cors = require("cors");
 const jwt = require("jsonwebtoken");
 require("dotenv").config();
 
+const connectDB = require("./config/db");
+const challengeRoutes = require("./routes/challengeRoutes");
+
 const app = express();
+
+const CLIENT_ID = process.env.GITHUB_CLIENT_ID;
+const CLIENT_SECRET = process.env.GITHUB_CLIENT_SECRET;
+const JWT_SECRET = process.env.JWT_SECRET || "my_jwt_secret_key";
+const FRONT_URL = process.env.FRONT_URL || "http://localhost:5173";
+const SERVER_URL =
+  process.env.SERVER_URL || `http://localhost:${process.env.PORT || 4000}`;
+const PORT = process.env.PORT || 4000;
+
+const allowedOrigins = [FRONT_URL, "http://localhost:5173"];
+
+const userAccessTokens = {};
 
 app.use(
   cors({
-    origin: "http://localhost:5173",
+    origin: (origin, callback) => {
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error("Not allowed by CORS"));
+      }
+    },
     credentials: true,
   })
 );
 
 app.use(express.json());
 
-const CLIENT_ID = process.env.GITHUB_CLIENT_ID;
-const CLIENT_SECRET = process.env.GITHUB_CLIENT_SECRET;
-const JWT_SECRET = process.env.JWT_SECRET || "my_jwt_secret_key";
-
-const userAccessTokens = {};
-
-// OAuth URL 발급
+// OAuth 경로
 app.get("/oauth/github", (req, res) => {
-  const redirectUri = "http://localhost:4000/oauth/github/callback";
+  const redirectUri = `${SERVER_URL}/oauth/github/callback`;
   const url = `https://github.com/login/oauth/authorize?client_id=${CLIENT_ID}&redirect_uri=${redirectUri}&scope=repo`;
   res.json({ url });
 });
 
-// OAuth 콜백
 app.get("/oauth/github/callback", async (req, res) => {
   const code = req.query.code;
 
@@ -46,7 +60,6 @@ app.get("/oauth/github/callback", async (req, res) => {
     );
 
     const accessToken = tokenRes.data.access_token;
-
     const userRes = await axios.get("https://api.github.com/user", {
       headers: { Authorization: `Bearer ${accessToken}` },
     });
@@ -77,7 +90,7 @@ app.get("/oauth/github/callback", async (req, res) => {
   }
 });
 
-// 인증 프록시(미들웨어)
+// 인증 미들웨어
 function authenticate(req, res, next) {
   const authHeader = req.headers.authorization;
   if (!authHeader) return res.status(401).json({ message: "인증 토큰 없음" });
@@ -92,21 +105,17 @@ function authenticate(req, res, next) {
   }
 }
 
-// GitHub Proxy (README 자동 디코딩 포함)
+// GitHub proxy
 app.get("/github/proxy", authenticate, async (req, res) => {
   const { path, ...params } = req.query;
 
-  //클라이언트가 보낸 인코딩된 path를 한 번 디코딩
   let dp = path;
   try {
     dp = decodeURIComponent(dp);
   } catch (e) {}
-  //혹시 두 번 인코딩된 경우를 대비해 다시 디코딩
   try {
     dp = decodeURIComponent(dp);
   } catch (e) {}
-
-  //fullPath 앞에 슬래시가 없으면 추가
   const fullPath = dp.startsWith("/") ? dp : `/${dp}`;
 
   const token = userAccessTokens[req.user.login];
@@ -114,6 +123,7 @@ app.get("/github/proxy", authenticate, async (req, res) => {
 
   try {
     const isReadme = fullPath.includes("/readme");
+
     const githubRes = await axios.get(`https://api.github.com${fullPath}`, {
       params,
       headers: {
@@ -124,50 +134,33 @@ app.get("/github/proxy", authenticate, async (req, res) => {
       },
       responseType: isReadme ? "text" : "json",
     });
+
     res.send(githubRes.data);
   } catch (error) {
-    if (error.response?.status === 409) {
-      console.warn(`Empty repo for path: ${fullPath}`);
-      return res.json([]);
+    const status = error.response?.status || 500;
+    const message = error.response?.data?.message || "GitHub 호출 실패";
+
+    // 빈 레포 에러는 따로 처리해서 빈 배열을 반환
+    if (message === "Git Repository is empty.") {
+      console.warn(`⚠️ Empty repository for ${fullPath}`);
+      return res.status(200).json([]); // 프론트가 parse할 수 있게 정상 응답
     }
-    console.error("Proxy 실패:", error.response?.data || error.message);
-    res.status(500).json({ message: "GitHub 호출 실패" });
+
+    console.error(
+      "GitHub API 호출 실패:",
+      error.response?.data || error.message
+    );
+    return res.status(status).json({
+      message: "GitHub 호출 실패",
+      githubMessage: message,
+    });
   }
 });
-app.post(
-  "/github/proxy/repos/:owner/:repo/pulls/:number/comments",
-  authenticate,
-  async (req, res) => {
-    const { owner, repo, number } = req.params;
-    const { body, commit_id, path, position } = req.body;
 
-    const token = userAccessTokens[req.user.login];
-    if (!token) return res.status(404).json({ message: "AccessToken 없음" });
+// Challenge API 등록
+connectDB();
+app.use("/api/challenge", challengeRoutes);
 
-    try {
-      const response = await axios.post(
-        `https://api.github.com/repos/${owner}/${repo}/pulls/${number}/comments`,
-        {
-          body,
-          commit_id,
-          path,
-          position,
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            Accept: "application/vnd.github+json",
-          },
-        }
-      );
-      res.json(response.data);
-    } catch (error) {
-      console.error("리뷰 코멘트 실패:", error.response?.data || error.message);
-      res.status(500).json({ message: "GitHub POST 호출 실패" });
-    }
-  }
-);
-// 일반 PR 코멘트 달기용 (본문 전체에 댓글)
 app.post(
   "/github/proxy/repos/:owner/:repo/issues/:number/comments",
   authenticate,
@@ -200,30 +193,7 @@ app.post(
   }
 );
 
-function authenticate(req, res, next) {
-  const authHeader = req.headers.authorization;
-  if (!authHeader) return res.status(401).json({ message: "인증 토큰 없음" });
-
-  const token = authHeader.split(" ")[1];
-  try {
-    const decoded = jwt.verify(token, JWT_SECRET);
-    req.user = decoded;
-    next();
-  } catch (e) {
-    return res.status(401).json({ message: "토큰 검증 실패" });
-  }
-}
-
-app.listen(4000, () => {
-  console.log("✅ 백엔드 서버 실행 중 http://localhost:4000");
+// ✅ 서버 실행
+app.listen(PORT, () => {
+  console.log(`✅ 백엔드 서버 실행 중: http://localhost:${PORT}`);
 });
-
-app.get("/", (req, res) => {
-  res.send("✅ GitHub OAuth 서버 작동 중");
-});
-
-const connectDB = require("./config/db.js");
-connectDB(); // db연결
-
-const challengeRoutes = require("./routes/challengeRoutes");
-app.use("/api/challenge", challengeRoutes);
