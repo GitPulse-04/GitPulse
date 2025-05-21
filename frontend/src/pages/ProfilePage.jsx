@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import css from "./ProfilePage.module.css";
 import UserStatCard from "../components/UserStatCard";
-import { getGitHubUserInfo, getRateLimit, getUserRepos } from "../apis/github";
+import { getGitHubUserInfo, getUserRepos } from "../apis/github";
 import RepoTable from "../components/RepoTable";
 import Header from "../components/Header";
 import CommitTimeChart from "../components/CommitTimeChart";
